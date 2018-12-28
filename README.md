@@ -1,2 +1,2 @@
-# ASP_Frontend
-React
+npm install 
+npm start
