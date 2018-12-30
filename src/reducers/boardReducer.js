@@ -15,29 +15,49 @@ import {
   GET_BOARD_REQUEST,
   DELETE_LIST_SUCCESS,
   MOVE_LIST_SUCCESS,
-  MOVE_LIST_REQUEST
+  MOVE_LIST_REQUEST,
+  UPDATE_MEMBER_SUCCESS
 } from '../actions/actionTypes'
 
 const initState = {
   loading: true,
-  byId: {}
+  byId: {},
+  movingList: false
 };
 
 const boardReducer = (state = initState, action) =>
   produce(state, draft => {
     switch (action.type) {
+      case UPDATE_MEMBER_SUCCESS: {
+        const { _id, users } = action.payload;
+        draft.byId[_id].users = users;
+        break;
+      }
       case ADD_LIST_SUCCESS: {
         const { boardId, list } = action.payload;
         draft.byId[boardId].lists = [...draft.byId[boardId].lists, list._id]
-        break;
+        // return {
+        //   ...state,
+        //   byId: {
+        //     ...state.byId,
+        //     [boardId]: {
+        //       ...state.byId[boardId],
+        //       lists: [...state.byId[boardId].lists, listId]
+        //     }
+        //   }
+        // }
       }
       case MOVE_LIST_REQUEST: {
-        // draft.loading = true;
+        draft.movingList = true;
         break;
       }
       case MOVE_LIST_SUCCESS: {
-        draft.loading = false;
-        const { oldListIndex, newListIndex, boardId } = action.payload;
+        const { oldListIndex, newListIndex, boardId, destListId, sourceListId } = action.payload;
+        const sourceList = draft.byId[boardId].lists[oldListIndex];
+        const destList = draft.byId[boardId].lists[newListIndex];
+        if (sourceList !== sourceListId && destList !== destListId) {
+          break;
+        }
         let newLists = [...draft.byId[boardId].lists];
         const [removedList] = newLists.splice(oldListIndex, 1);
         newLists.splice(newListIndex, 0, removedList);
@@ -70,6 +90,7 @@ const boardReducer = (state = initState, action) =>
       }
       case UPDATE_CURRENT_BOARD_ID: {
         draft.boardId = action.payload;
+        draft.loading = { ...draft.loading, loading: true };
         break;
       }
       case ADD_BOARD_REQUEST: {
@@ -100,7 +121,8 @@ const boardReducer = (state = initState, action) =>
       default:
         return draft
     }
-  })
+  });
+
 
 
 export default boardReducer;

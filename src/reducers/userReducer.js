@@ -4,14 +4,15 @@ const initState = JSON.parse(localStorage.getItem('user')) || {};
 
 const userReducer = (state = initState, action) => {
     switch (action.type) {
-        case userConstants.UPDATE_USER_STATE:
+        case userConstants.LOGIN_SUCCESS: {
             return { 
                 ... state, 
-                id: action.user.id,
+                _id: action.user._id,
                 name: action.user.name,
                 email: action.user.email,
-                password: action.user.password
+                token: action.user.token,
             };
+        }
         default:
             return state;
     }

@@ -1,5 +1,6 @@
 // import config from 'config';
 // import { authHeader } from '../_helpers';
+import axios from 'axios';
 
 export const userService = {
     login,
@@ -7,30 +8,21 @@ export const userService = {
     register,
     getById,
 };
-const baseURL = "http://localhost:4000";
+const baseURL = "http://localhost:4000/api";
 
 function login(email, password) {
-    // const requestOptions = {
-    //     method: 'POST',
-    //     headers: { 'Content-Type': 'application/json' },
-    //     body: JSON.stringify({ email, password })
-    // };
     const requestOptions = {
-        method: 'GET',
+        method: 'POST',
         headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password })
     };
 
-    return fetch(`${baseURL}/users?email=${email}`, requestOptions)
-        .then(handleResponse)
-        .then(data => {
+    return axios.post(`${baseURL}/users/login`, {email, password})
+        .then(response => {
             // login successful if there's a jwt token in the response
-            const user = data[0];
-            if (user.password == password) {
-                // store user details and jwt token in local storage to keep user logged in between page refreshes
-                localStorage.setItem('user', JSON.stringify(user));
-            }
-
-            return user;
+            const {data} = response;
+            localStorage.setItem('user', JSON.stringify(data))
+            return data;
         });
 }
 
@@ -48,13 +40,10 @@ function getById(id) {
 }
 
 function register(user) {
-    const requestOptions = {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(user)
-    };
-
-    return fetch(`${baseURL}/users/`, requestOptions).then(handleResponse);
+    return axios.post(`${baseURL}/users/register`, user).then(response => {
+        const {data} = response;
+        console.log(data);
+    });
 }
 
 function update(user) {

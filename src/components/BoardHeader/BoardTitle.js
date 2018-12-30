@@ -29,12 +29,16 @@ class BoardTitle extends Component {
   };
 
   submitTitle = () => {
-    const { dispatch, boardId, boardTitle, board } = this.props;
+    const { dispatch, boardId, boardTitle, board, user } = this.props;
     const { newTitle } = this.state;
     if (newTitle === "") return;
     if (boardTitle !== newTitle) {
-      board.title = newTitle;
-      dispatch(boardActions.changeTitle(board));
+      // board.title = newTitle;
+      const boardToUpdate = {
+        ...board,
+        title: newTitle
+      }
+      dispatch(boardActions.changeTitle({email: user.email, boardToUpdate}));
     }
     this.setState({ isOpen: false });
   };
@@ -58,8 +62,8 @@ class BoardTitle extends Component {
 
   render() {
     const { isOpen, newTitle } = this.state;
-    const { boardTitle } = this.props;
-    return isOpen ? (
+    const { boardTitle, user, board } = this.props;
+    return (isOpen && (board.owner === user.email))? (
       <input
         autoFocus
         value={newTitle}
@@ -84,7 +88,8 @@ const mapStateToProps = (state) => {
   return {
     board: state.boards.byId[boardId],
     boardTitle: state.boards.byId[boardId].title,
-    boardId
+    boardId,
+    user: state.user
   };
 };
 

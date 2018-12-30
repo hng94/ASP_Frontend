@@ -1,12 +1,16 @@
 import React, { Component } from "react";
-import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { Droppable } from "react-beautiful-dnd";
 import Card from "../Card/Card";
-import { cardActions } from "../../actions/cardActions";
+import { Spin } from "antd";
+import PropTypes from "prop-types";
 
 class Cards extends Component {
-  
+  static propTypes = {
+    listId: PropTypes.string.isRequired,
+    cards: PropTypes.arrayOf(PropTypes.string).isRequired
+  };
+
   componentDidUpdate = prevProps => {
     // Scroll to bottom of list if a new card has been added
     if (
@@ -23,44 +27,44 @@ class Cards extends Component {
 
   render() {
     const { listId, cards, cardLoading } = this.props;
-    if (cardLoading) {
-      return (
-        <p>Card loading</p>
-      )
-    }
     return (
-      <Droppable droppableId={listId}>
-        {(provided, { isDraggingOver }) => (
-          <>
-            <div className="cards" ref={provided.innerRef}>
-              {cards.map((cardId, index) => (
-                <Card
-                  isDraggingOver={isDraggingOver}
-                  key={cardId}
-                  cardId={cardId}
-                  index={index}
-                  listId={listId}
-                />
-              ))}
-              {provided.placeholder}
-              <div
-                style={{ float: "left", clear: "both" }}
-                ref={el => {
-                  this.listEnd = el;
-                }}
-              />
-            </div>
-          </>
+      <div>
+        {!cardLoading && (
+          <Droppable droppableId={listId}>
+            {(provided, { isDraggingOver }) => (
+              <>
+                <div className="cards" ref={provided.innerRef}>
+                  {cards.map((cardId, index) => (
+                    <Card
+                      isDraggingOver={isDraggingOver}
+                      key={cardId}
+                      cardId={cardId}
+                      index={index}
+                      listId={listId}
+                    />
+                  ))}
+                  {provided.placeholder}
+                  <div
+                    style={{ float: "left", clear: "both" }}
+                    ref={el => {
+                      this.listEnd = el;
+                    }}
+                  />
+                </div>
+              </>
+            )}
+          </Droppable>
         )}
-      </Droppable>
+      </div>
     );
   }
 }
 
 const mapStateToProps = (state, ownProps) => {
+  const cards = state.lists.byId[ownProps.listId].cards;
   return {
     cardLoading: state.cards.loading,
-    cards: state.lists.byId[ownProps.listId].cards
+    cards
   }
 };
 

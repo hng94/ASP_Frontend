@@ -21,10 +21,10 @@ class CardAdder extends Component {
     };
   }
 
-  componentWillUnmount() {
-    const { socket } = this.props;
-    socket.disconnect();
-  }
+  // componentWillUnmount() {
+  //   const { socket } = this.props;
+  //   socket.disconnect();
+  // }
   
   toggleCardComposer = () => {
     this.setState({ isOpen: !this.state.isOpen });
@@ -47,7 +47,6 @@ class CardAdder extends Component {
     const { newText } = this.state;
     const { listId, dispatch, socket } = this.props;
     if (newText === "") return;
-
     const data = { cardTitle: newText,  listId };
     dispatch(cardActions.addCardRequest(socket, data))
     this.toggleCardComposer();

@@ -1,5 +1,17 @@
 @import "../../variables.scss";
 
+.add-user {
+  padding: 0 0 15px 15px;
+}
+
+.global-search-wrapper {
+  padding-right: 50px;
+}
+
+.global-search.ant-select-auto-complete .ant-input-affix-wrapper .ant-input-suffix {
+  right: 0;
+}
+
 .board {
   display: inline-flex;
   height: 100%;
@@ -30,12 +42,14 @@
 
 .lists-wrapper {
   display: inline-flex;
+  flex-direction: column;
   box-sizing: border-box;
   height: 100%;
   padding: 85px 5px 8px 5px;
 }
 
 .lists {
+  padding-left: 10px;
   display: inline-flex;
   align-items: flex-start;
   height: 100%;

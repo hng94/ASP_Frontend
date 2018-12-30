@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import { withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 import { Button, Wrapper, Menu, MenuItem } from "react-aria-menubutton";
-import {FaTrash} from "react-icons/fa";
+import { FaTrash } from "react-icons/fa";
 import "./BoardDeleter.scss";
 import { boardActions } from "../../actions/boardActions";
 
@@ -17,29 +17,44 @@ class BoardDeleter extends Component {
   };
 
   handleSelection = () => {
-    const { dispatch, match, history } = this.props;
+    const { dispatch, match, history, user } = this.props;
     const { boardId } = match.params;
-    dispatch(boardActions.deleteBoard(boardId));
+    dispatch(boardActions.deleteBoard(user.email, boardId));
     history.push("/");
   };
 
-  render = () => (
-    <Wrapper
-      className="board-deleter-wrapper"
-      onSelection={this.handleSelection}
-    >
-      <Button className="board-deleter-button">
-        <div className="modal-icon">
-          <FaTrash />
-        </div>
-        <div className="board-header-right-text">&nbsp;Delete board</div>
-      </Button>
-      <Menu className="board-deleter-menu">
-        <div className="board-deleter-header">Are you sure?</div>
-        <MenuItem className="board-deleter-confirm">Delete</MenuItem>
-      </Menu>
-    </Wrapper>
-  );
+  render() {
+    const { board, user } = this.props;
+    return (
+      <>
+        {(board.owner === user.email) &&
+          <Wrapper
+            className="board-deleter-wrapper"
+            onSelection={this.handleSelection}
+          >
+            <Button className="board-deleter-button">
+              <div className="modal-icon">
+                <FaTrash />
+              </div>
+              <div className="board-header-right-text">&nbsp;Delete board</div>
+            </Button>
+            <Menu className="board-deleter-menu">
+              <div className="board-deleter-header">Are you sure?</div>
+              <MenuItem className="board-deleter-confirm">Delete</MenuItem>
+            </Menu>
+          </Wrapper>
+        }
+      </>
+    )
+  }
 }
 
-export default withRouter(connect()(BoardDeleter));
+const mapStateToProps = state => {
+  const { boardId } = state.boards;
+  return {
+    user: state.user,
+    board: state.boards.byId[boardId]
+  }
+}
+
+export default withRouter(connect(mapStateToProps)(BoardDeleter));

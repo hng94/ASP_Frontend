@@ -5,6 +5,7 @@ import Textarea from "react-textarea-autosize";
 import shortid from "shortid";
 import "./ListAdder.scss";
 import {listActions} from '../../actions/listActions'
+import withRouter from 'react-router-dom';
 
 class ListAdder extends Component {
   static propTypes = {
@@ -25,10 +26,11 @@ class ListAdder extends Component {
   //   dispatch(listActions.getList(boardId))
   // }
 
-  componentWillUnmount() {
-    const { socket } = this.props;
-    socket.disconnect();
-  }
+  // componentWillUnmount() {
+  //   const { socket } = this.props;
+  //   socket.disconnect();
+  // }
+
   handleBlur = () => {
     this.setState({ isOpen: false });
   };

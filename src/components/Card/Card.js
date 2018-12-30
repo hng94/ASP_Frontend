@@ -7,17 +7,16 @@ import CardHeader from './CardHeader';
 import "./Card.scss";
 
 class Card extends Component {
-  // static propTypes = {
-  //   card: PropTypes.shape({
-  //     _id: PropTypes.string.isRequired,
-  //     text: PropTypes.string.isRequired,
-  //     color: PropTypes.string
-  //   }).isRequired,
-  //   listId: PropTypes.string.isRequired,
-  //   isDraggingOver: PropTypes.bool.isRequired,
-  //   index: PropTypes.number.isRequired,
-  //   dispatch: PropTypes.func.isRequired
-  // };
+  static propTypes = {
+    card: PropTypes.shape({
+      _id: PropTypes.string.isRequired,
+      title: PropTypes.string.isRequired,
+    }).isRequired,
+    listId: PropTypes.string.isRequired,
+    isDraggingOver: PropTypes.bool.isRequired,
+    index: PropTypes.number.isRequired,
+    dispatch: PropTypes.func.isRequired
+  };
 
   constructor() {
     super();
@@ -118,8 +117,11 @@ class Card extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
+  console.log(state);
+  const card = state.cards.byId[ownProps.cardId]
   return {
-    card: state.cards.byId[ownProps.cardId]
+    card,
+    loading: state.cards.loading
   }
 };
 

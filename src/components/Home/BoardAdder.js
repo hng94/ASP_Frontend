@@ -32,10 +32,10 @@ class BoardAdder extends Component {
     if (title === "") {
       return;
     }
-    const { dispatch, history, userId } = this.props;
+    const { dispatch, user } = this.props;
     const newBoard = {
       title: title,
-      users: [userId]
+      users: [user.email]
     }
     dispatch(boardActions.createBoard(newBoard));
     this.setState({ isOpen: false, title: "" });
@@ -78,7 +78,8 @@ class BoardAdder extends Component {
 }
 
 const mapStateToProps = state => ({
-  userId: state.user ? state.user.id.toString() : "guest"
+  userId: state.user ? state.user._id.toString() : "guest",
+  user: state.user
 });
 
 export default connect(mapStateToProps)(BoardAdder);

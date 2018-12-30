@@ -8,16 +8,35 @@ import { PrivateRoute } from './PrivateRoute/PrivateRoute'
 import Home from './Home/Home'
 import LoginPage from './LoginPage/LoginPage'
 import RegisterPage from './RegisterPage/RegisterPage'
+import 'antd/dist/antd.css';
+import { message } from 'antd';
+import axios from 'axios';
+
+
 
 class App extends Component {
+  constructor(props) {
+    super(props);
+    const {user} = this.props;
+    axios.defaults.headers = {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${user.token}`
+    }
+  }
   render () {
+    const callMessage = (type, content) => {
+      if (type === 'alert-success') {
+        message.success(content);
+      }
+      else {
+        message.error(content);
+      }
+    };
     const { alert } = this.props
 
     return (
       <>
-        {alert.message &&
-          <div className={`alert ${alert.type}`}>{alert.message}</div>
-        }
+        {alert.message && callMessage(alert.type, alert.message)}
         <Router history={history}>
           <div>
             <PrivateRoute exact path="/" component={Home} />
@@ -31,6 +50,6 @@ class App extends Component {
   }
 }
 
-const mapStateToProps = state => ({ alert: state.alert })
+const mapStateToProps = state => ({ alert: state.alert, user: state.user })
 
 export default connect(mapStateToProps)(App)

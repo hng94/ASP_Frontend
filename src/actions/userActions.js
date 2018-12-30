@@ -2,6 +2,7 @@ import { userConstants } from './actionTypes';
 import { userService } from '../services';
 import { alertActions } from './alertActions';
 import { history } from '../helpers';
+import axios from 'axios';
 
 export const userActions = {
     login,
@@ -17,10 +18,13 @@ function login(email, password) {
 
         userService.login(email, password)
             .then(
-                user => { 
+                user => {
+                    axios.defaults.headers = {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${user.token}`
+                    }
                     dispatch(alertActions.clear());
                     dispatch(success(user));
-                    dispatch(updateUser(user));
                     history.push('/');
                 },
                 error => {
@@ -30,7 +34,7 @@ function login(email, password) {
             );
     };
 
-    function updateUser(user) { return { type: userConstants.UPDATE_USER_STATE, user}}
+    // function updateUser(user) { return { type: userConstants.UPDATE_USER_STATE, user}}
     function request(user) { return { type: userConstants.LOGIN_REQUEST, user } }
     function success(user) { return { type: userConstants.LOGIN_SUCCESS, user } }
     function failure(error) { return { type: userConstants.LOGIN_FAILURE, error } }
@@ -47,7 +51,7 @@ function register(user) {
 
         userService.register(user)
             .then(
-                user => { 
+                user => {
                     dispatch(success());
                     history.push('/login');
                     dispatch(alertActions.success('Registration successful'));

@@ -39,12 +39,12 @@ function addListSuccess(data) {
     }
 }
 
-function changeListTitleRequest(socket, list) {
+function changeListTitleRequest(socket, boardId, list) {
     return dispatch => {
         dispatch({
             type: CHANGE_LIST_TITLE_REQUEST
         })
-        socket.emit(CHANGE_LIST_TITLE_REQUEST, list);
+        socket.emit(CHANGE_LIST_TITLE_REQUEST, {boardId, list});
     }
 }
 
@@ -72,7 +72,7 @@ function deleteListSuccess(data) {
 }
 
 function moveListRequest(socket, data) {
-    return dispatch => {
+    return async dispatch => {
         dispatch({
             type: MOVE_LIST_REQUEST
         })

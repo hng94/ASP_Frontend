@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { history } from '../helpers';
 
 import {
   GET_BOARD_REQUEST,
@@ -14,18 +15,21 @@ import {
   GET_CARD_REQUEST,
   GET_LIST_SUCCESS,
   GET_CARD_SUCCESS,
+  UPDATE_MEMBER_SUCCESS,
+  REMOVE_MEMBER_REQUEST,
+  ADD_MEMBER_REQUEST,
 } from './actionTypes';
+import { alertActions } from './alertActions';
 
-const baseURL = 'http://localhost:4000/api'
-const userId = '5c0d0228654ec309cc2314ff'
+const baseURL = 'http://localhost:4000/api';
 
-function get() {
+function get(userEmail) {
   return async dispatch => {
     dispatch({
       type: GET_BOARD_REQUEST
     })
     try {
-      const { data } = await axios.get(`${baseURL}/boards/${userId}`);
+      const { data } = await axios.get(`${baseURL}/boards/${userEmail}`);
       dispatch({
         type: GET_BOARD_SUCCESS,
         payload: data
@@ -39,44 +43,41 @@ function get() {
   }
 }
 
-function getById(boardId) {
+function getById(userEmail, boardId) {
   return async dispatch => {
     dispatch({
-      type: GET_BOARD_REQUEST
+      type: GET_CARD_REQUEST
     });
     dispatch({
       type: GET_LIST_REQUEST
     });
     dispatch({
-      type: GET_CARD_REQUEST
+      type: GET_BOARD_REQUEST
     });
     try {
-      const { data } = await axios.get(`${baseURL}/boards/${userId}/byId/${boardId}`);
+      const { data } = await axios.get(`${baseURL}/boards/${userEmail}/byId/${boardId}`);
       const { board, lists, cards } = data;
       dispatch({
-        type: GET_BOARD_SUCCESS,
-        payload: [board],
+        type: GET_CARD_SUCCESS,
+        payload: cards,
       })
       dispatch({
         type: GET_LIST_SUCCESS,
         payload: lists,
       })
       dispatch({
-        type: GET_CARD_SUCCESS,
-        payload: cards,
+        type: GET_BOARD_SUCCESS,
+        payload: [board],
       })
     } catch (error) {
-      dispatch({
-        type: GET_BOARD_FAILURE,
-        payload: error.toString()
-      })
+      dispatch(alertActions.error(error.toString()));
+      history.push('/')
     }
   }
 }
 
 function createBoard(board) {
   return async (dispatch) => {
-    board.users = [userId]
     dispatch({
       type: ADD_BOARD_REQUEST
     })
@@ -96,10 +97,10 @@ function createBoard(board) {
   }
 }
 
-function deleteBoard(_id) {
+function deleteBoard(email, _id) {
   return async dispatch => {
     try {
-      const { data } = await axios.delete(`${baseURL}/boards/${_id}`);
+      const { data } = await axios.put(`${baseURL}/boards/delete`, {_id, email});
       dispatch({
         type: DELETE_BOARD_SUCCESS,
         payload: _id
@@ -116,22 +117,36 @@ function deleteBoard(_id) {
   }
 }
 
-function changeTitle(board) {
+function changeTitle(req) {
   return async dispatch => {
     try {
-      const requestOptions = {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-      };
-      const { _id } = board;
-      const { data } = await axios.put(`${baseURL}/boards/changeBoardTitle`, board);
+      const { data } = await axios.put(`${baseURL}/boards/changeBoardTitle`, req);
+      const board = data;
       dispatch({
         type: CHANGE_BOARD_TITLE,
-        payload: data
+        payload: board,
       })
     } catch (error) {
-
+      dispatch(alertActions.error(error.toString()))
     }
+  }
+}
+
+function addMember(socket, req) {
+  return dispatch => {
+    dispatch({
+      type: ADD_MEMBER_REQUEST,
+    })
+    socket.emit(ADD_MEMBER_REQUEST, req);
+  }
+}
+
+function removeMember(socket, req) {
+  return dispatch => {
+    dispatch({
+      type: REMOVE_MEMBER_REQUEST,
+    })
+    socket.emit(REMOVE_MEMBER_REQUEST, req);
   }
 }
 
@@ -140,5 +155,7 @@ export const boardActions = {
   getById,
   createBoard,
   deleteBoard,
-  changeTitle
+  changeTitle,
+  addMember,
+  removeMember
 }

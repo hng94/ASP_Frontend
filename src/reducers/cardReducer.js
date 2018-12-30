@@ -1,5 +1,5 @@
 import produce from 'immer'
-import { ADD_CARD_SUCCESS, CHANGE_CARD_TITLE_SUCCESS, DELETE_CARD_SUCCESS, DELETE_LIST_SUCCESS, GET_CARD_SUCCESS, MOVE_CARD_SUCCESS, GET_CARD_REQUEST } from '../actions/actionTypes';
+import { ADD_CARD_SUCCESS, CHANGE_CARD_TITLE_SUCCESS, DELETE_CARD_SUCCESS, DELETE_LIST_SUCCESS, GET_CARD_SUCCESS, MOVE_CARD_SUCCESS, GET_CARD_REQUEST, MOVE_CARD_REQUEST } from '../actions/actionTypes';
 
 const initState = {
   loading: true,
@@ -45,6 +45,14 @@ const cardReducer = (state = initState, action) =>
         const { cardId } = action.payload;
         const { [cardId]: deletedCard, ...restOfCards } = draft.byId;
         draft.byId = restOfCards;
+        break;
+      }
+      case MOVE_CARD_REQUEST: {
+        draft.loading = true;
+        break;
+      }
+      case MOVE_CARD_SUCCESS: {
+        draft.loading = false;
         break;
       }
       // Find every card from the deleted list and remove it (actually unnecessary since they will be removed from db on next write anyway)

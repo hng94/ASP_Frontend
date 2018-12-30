@@ -3,9 +3,10 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import Textarea from "react-textarea-autosize";
 import { Button, Wrapper, Menu, MenuItem } from "react-aria-menubutton";
-import {FaTrash} from "react-icons/fa";
+import { FaTrash } from "react-icons/fa";
 import "./ListHeader.scss";
 import { listActions } from "../../actions/listActions";
+import {withRouter} from 'react-router-dom';
 
 class ListTitle extends Component {
   static propTypes = {
@@ -40,14 +41,14 @@ class ListTitle extends Component {
 
   handleSubmit = () => {
     const { newTitle } = this.state;
-    const { listTitle, listId, dispatch, socket } = this.props;
+    const { listTitle, listId, dispatch, socket, boardId } = this.props;
     if (newTitle === "") return;
     if (newTitle !== listTitle) {
-      const data = {
+      const listToUpdate = {
         _id: listId,
         title: newTitle
       }
-      dispatch(listActions.changeListTitleRequest(socket, data))
+      dispatch(listActions.changeListTitleRequest(socket, boardId, listToUpdate))
     }
     this.setState({ isOpen: false });
   };
@@ -91,20 +92,20 @@ class ListTitle extends Component {
             />
           </div>
         ) : (
-          <div
-            {...dragHandleProps}
-            role="button"
-            tabIndex={0}
-            onClick={this.openTitleEditor}
-            onKeyDown={event => {
-              this.handleButtonKeyDown(event);
-              dragHandleProps.onKeyDown(event);
-            }}
-            className="list-title-button"
-          >
-            {listTitle}
-          </div>
-        )}
+            <div
+              {...dragHandleProps}
+              role="button"
+              tabIndex={0}
+              onClick={this.openTitleEditor}
+              onKeyDown={event => {
+                this.handleButtonKeyDown(event);
+                dragHandleProps.onKeyDown(event);
+              }}
+              className="list-title-button"
+            >
+              {listTitle}
+            </div>
+          )}
         <Wrapper className="delete-list-wrapper" onSelection={this.deleteList}>
           <Button className="delete-list-button">
             <FaTrash />
@@ -119,8 +120,12 @@ class ListTitle extends Component {
   }
 }
 
-const mapStateToProps = (state) => ({
-  socket: state.socket
-});
+const mapStateToProps = (state) => {
+  return {
+    socket: state.socket,
+    boardId: state.boards.boardId
+  }
+}
+
 
 export default connect(mapStateToProps)(ListTitle);

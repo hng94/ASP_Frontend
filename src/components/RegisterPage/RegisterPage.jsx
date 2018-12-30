@@ -1,94 +1,76 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { userActions } from '../../actions';
+import {
+  Form, Icon, Input, Button, Checkbox,
+} from 'antd';
+import './RegisterPage.scss';
 
-class RegisterPage extends React.Component {
-    constructor(props) {
-        super(props);
-
-        this.state = {
-            user: {
-                name: '',
-                email: '',
-                password: ''
-            },
-            submitted: false
-        };
-
-        this.handleChange = this.handleChange.bind(this);
-        this.handleSubmit = this.handleSubmit.bind(this);
-    }
-
-    handleChange(event) {
-        const { name, value } = event.target;
-        const { user } = this.state;
-        this.setState({
-            user: {
-                ...user,
-                [name]: value
-            }
-        });
-    }
-
-    handleSubmit(event) {
-        event.preventDefault();
-
-        this.setState({ submitted: true });
-        const { user } = this.state;
-        const { dispatch } = this.props;
-        if (user.name && user.email && user.password) {
-            dispatch(userActions.register(user));
+class RegisterForm extends React.Component {
+  handleSubmit = (e) => {
+    e.preventDefault();
+    const {dispatch} = this.props;
+    this.props.form.validateFields((err, values) => {
+      if (!err) {
+        const {email, password, name} = values;
+        if (email && password && name) {
+          const user = {
+            email,
+            password,
+            name,
+            id: null
+          }
+          dispatch(userActions.register(user));
         }
-    }
+      }
+    });
 
-    render() {
-        const { registering  } = this.props;
-        const { user, submitted } = this.state;
-        return (
-            <div className="row justify-content-md-center">
-                <div className="col-md-4">
-                    <h2>Register</h2>
-                    <form name="form" onSubmit={this.handleSubmit}>
-                        <div className={'form-group' + (submitted && !user.firstName ? ' has-error' : '')}>
-                            <label htmlFor="name">Name</label>
-                            <input type="text" className="form-control" name="name" value={user.name} onChange={this.handleChange} />
-                            {submitted && !user.name &&
-                                <div className="help-block">First Name is required</div>
-                            }
-                        </div>
-                        <div className={'form-group' + (submitted && !user.email ? ' has-error' : '')}>
-                            <label htmlFor="username">Email</label>
-                            <input type="text" className="form-control" name="email" value={user.email} onChange={this.handleChange} />
-                            {submitted && !user.email &&
-                                <div className="help-block">Email is required</div>
-                            }
-                        </div>
-                        <div className={'form-group' + (submitted && !user.password ? ' has-error' : '')}>
-                            <label htmlFor="password">Password</label>
-                            <input type="password" className="form-control" name="password" value={user.password} onChange={this.handleChange} />
-                            {submitted && !user.password &&
-                                <div className="help-block">Password is required</div>
-                            }
-                        </div>
-                        <div className="form-group">
-                            <button className="btn btn-primary">Register</button>
-                            {registering && 
-                                <img src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />
-                            }
-                            <Link to="/login" className="btn btn-link">Cancel</Link>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        );
-    }
+  }
+
+  render() {
+    const { getFieldDecorator } = this.props.form;
+    return (
+      <div className="register-form">
+        <h1>Trollo</h1>
+        <Form onSubmit={this.handleSubmit}>
+          <Form.Item>
+            {getFieldDecorator('name', {
+              rules: [
+                { required: true, message: 'Please input your name!' }
+              ],
+            })(
+              <Input prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="Email" />
+            )}
+          </Form.Item>
+          <Form.Item>
+            {getFieldDecorator('email', {
+              rules: [
+                {type: 'email', message: 'The input is not valid E-mail!',},
+                { required: true, message: 'Please input your email!' }
+              ],
+            })(
+              <Input prefix={<Icon type="mail" style={{ color: 'rgba(0,0,0,.25)' }} />} placeholder="Email" />
+            )}
+          </Form.Item>
+          <Form.Item>
+            {getFieldDecorator('password', {
+              rules: [{ required: true, message: 'Please input your Password!' }],
+            })(
+              <Input prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />} type="password" placeholder="Password" />
+            )}
+          </Form.Item>
+          <Form.Item>
+            <Button type="primary" htmlType="submit" className="register-form-button">
+              Register
+            </Button>
+            Or <a href="/login">Login now!</a>
+          </Form.Item>
+        </Form>
+      </div>
+    );
+  }
 }
 
+const RegisterPage = Form.create()(connect()(RegisterForm));
 
-const mapStateToProps = state => ({
-    registering: state.registering
-  });
-  
-export default connect(mapStateToProps)(RegisterPage);
-  
+export default RegisterPage;
