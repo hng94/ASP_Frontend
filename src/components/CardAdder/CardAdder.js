@@ -6,6 +6,7 @@ import shortid from "shortid";
 import ClickOutside from "../ClickOutside/ClickOutside";
 import "./CardAdder.scss";
 import {cardActions} from '../../actions/cardActions';
+import { Button, Icon } from "antd";
 
 class CardAdder extends Component {
   static propTypes = {
@@ -45,9 +46,9 @@ class CardAdder extends Component {
   handleSubmit = event => {
     event.preventDefault();
     const { newText } = this.state;
-    const { listId, dispatch, socket } = this.props;
+    const { listId, dispatch, socket, boardId } = this.props;
     if (newText === "") return;
-    const data = { cardTitle: newText,  listId };
+    const data = { cardTitle: newText,  listId, boardId };
     dispatch(cardActions.addCardRequest(socket, data))
     this.toggleCardComposer();
     this.setState({ newText: "" });
@@ -76,15 +77,16 @@ class CardAdder extends Component {
         </form>
       </ClickOutside>
     ) : (
-      <button onClick={this.toggleCardComposer} className="add-card-button">
-        +
-      </button>
+      <Button type="primary" onClick={this.toggleCardComposer} className="add-card-button">
+        <Icon type="plus"/>
+      </Button>
     );
   }
 }
 
 const mapStateToProps = (state) => ({
-  socket: state.socket
+  socket: state.socket,
+  boardId: state.boards.boardId
 });
 
 export default connect(mapStateToProps)(CardAdder);

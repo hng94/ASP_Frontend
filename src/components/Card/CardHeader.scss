@@ -50,8 +50,8 @@
   display: flex;
   align-items: center;
   margin: 4px;
-  padding: 10px;
-  border-radius: $card-radius;
+  padding: 4px 8px !important;
+  border-radius: 50px !important;
   color: $white;
   font-size: 16px;
   cursor: pointer;
@@ -97,4 +97,11 @@
 .delete-card-confirm:hover,
 .delete-card-confirm:focus {
   background: darkred;
+}
+
+.delete-card {
+  margin: 5px !important;
+  &:hover {
+    color: #dc3545;
+  }
 }

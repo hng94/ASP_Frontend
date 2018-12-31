@@ -2,10 +2,11 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import Textarea from "react-textarea-autosize";
-import { Button, Wrapper, Menu, MenuItem } from "react-aria-menubutton";
-import { FaTrash } from "react-icons/fa";
 import "./CardHeader.scss";
 import { cardActions } from "../../actions/cardActions";
+import {Button, Icon, Modal} from 'antd';
+
+const confirm = Modal.confirm;
 
 class CardTitle extends Component {
   static propTypes = {
@@ -40,12 +41,13 @@ class CardTitle extends Component {
 
   handleSubmit = () => {
     const { newTitle } = this.state;
-    const { cardTitle, cardId, dispatch, socket } = this.props;
+    const { cardTitle, cardId, dispatch, socket, boardId } = this.props;
     if (newTitle === "") return;
     if (newTitle !== cardTitle) {
       const data = {
         _id: cardId,
-        title: newTitle
+        title: newTitle,
+        boardId
       }
       dispatch(cardActions.changeCardTitleRequest(socket, data))
     }
@@ -57,8 +59,17 @@ class CardTitle extends Component {
   };
 
   deletecard = () => {
-    const { cardId, listId, dispatch, socket } = this.props;
-    dispatch(cardActions.deleteCardRequest(socket, { listId, cardId }))
+    const { cardId, listId, dispatch, socket, boardId } = this.props;
+    confirm({
+      title: 'Are you sure to remove this card?',
+      content: 'Removed cards can not be restored.',
+      okText: 'Yes',
+      okType: 'danger',
+      cancelText: 'No',
+      onOk() {
+        dispatch(cardActions.deleteCardRequest(socket, { listId, cardId, boardId }))
+      }
+    });
   };
 
   openTitleEditor = () => {
@@ -105,16 +116,15 @@ class CardTitle extends Component {
               {cardTitle}
             </div>
           )}
-        <button className="btn btn-default delete-card-button" onClick={this.deletecard}>
-          <FaTrash />
-        </button>
+          <Icon type="close-circle" className="delete-card" onClick={this.deletecard}/>
       </div>
     );
   }
 }
 
 const mapStateToProps = (state) => ({
-  socket: state.socket
+  socket: state.socket,
+  boardId: state.boards.boardId
 });
 
 export default connect(mapStateToProps)(CardTitle);

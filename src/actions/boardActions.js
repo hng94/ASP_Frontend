@@ -18,6 +18,7 @@ import {
   UPDATE_MEMBER_SUCCESS,
   REMOVE_MEMBER_REQUEST,
   ADD_MEMBER_REQUEST,
+  DELETE_BOARD_REQUEST,
 } from './actionTypes';
 import { alertActions } from './alertActions';
 
@@ -97,23 +98,24 @@ function createBoard(board) {
   }
 }
 
-function deleteBoard(email, _id) {
+function deleteBoard(socket, email, _id) {
   return async dispatch => {
-    try {
-      const { data } = await axios.put(`${baseURL}/boards/delete`, {_id, email});
-      dispatch({
-        type: DELETE_BOARD_SUCCESS,
-        payload: _id
-      })
-    } catch (error) {
-      dispatch({
-        type: MESSAGE_FAILURE,
-        payload: error
-      })
-    }
-    finally {
-      // window.location.href = '/';
-    }
+    // try {
+    //   const { data } = await axios.put(`${baseURL}/boards/delete`, {_id, email});
+    //   dispatch({
+    //     type: DELETE_BOARD_SUCCESS,
+    //     payload: _id
+    //   })
+    // } catch (error) {
+    //   dispatch({
+    //     type: MESSAGE_FAILURE,
+    //     payload: error
+    //   })
+    // }
+    dispatch({
+      type: DELETE_BOARD_REQUEST
+    })
+    socket.emit(DELETE_BOARD_REQUEST, {email, _id})
   }
 }
 

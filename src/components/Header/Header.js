@@ -2,11 +2,8 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
-import {FaSignOutAlt} from "react-icons/fa";
 import logoFH from "../../fh-kiel.png";
 import "./Header.scss";
-import { userActions } from "../../actions";
-import {history} from "../../helpers/history";
 import { userService } from "../../services";
 
 class Header extends Component {

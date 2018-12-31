@@ -11,11 +11,6 @@ export const userService = {
 const baseURL = "http://localhost:4000/api";
 
 function login(email, password) {
-    const requestOptions = {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password })
-    };
 
     return axios.post(`${baseURL}/users/login`, {email, password})
         .then(response => {
@@ -46,25 +41,7 @@ function register(user) {
     });
 }
 
-function update(user) {
-    const requestOptions = {
-        method: 'PUT',
-        headers: {  'Content-Type': 'application/json' },
-        body: JSON.stringify(user)
-    };
 
-    return fetch(`/users/${user.id}`, requestOptions).then(handleResponse);;
-}
-
-// prefixed function name with underscore because delete is a reserved word in javascript
-function _delete(id) {
-    const requestOptions = {
-        method: 'DELETE',
-        // headers: authHeader()
-    };
-
-    return fetch(`/users/${id}`, requestOptions).then(handleResponse);
-}
 
 function handleResponse(response) {
     return response.text().then(text => {

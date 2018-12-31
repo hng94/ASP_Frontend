@@ -2,11 +2,10 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import Textarea from "react-textarea-autosize";
-import { Button, Wrapper, Menu, MenuItem } from "react-aria-menubutton";
-import { FaTrash } from "react-icons/fa";
 import "./ListHeader.scss";
 import { listActions } from "../../actions/listActions";
-import {withRouter} from 'react-router-dom';
+import { Icon, Modal, Button } from "antd";
+const confirm = Modal.confirm;
 
 class ListTitle extends Component {
   static propTypes = {
@@ -58,8 +57,18 @@ class ListTitle extends Component {
   };
 
   deleteList = () => {
-    const { listId, cards, boardId, dispatch, socket } = this.props;
-    dispatch(listActions.deleteListRequest(socket, { boardId, listId }))
+    const { listId, boardId, dispatch, socket } = this.props;
+    confirm({
+      title: 'Are you sure to remove this list?',
+      content: 'Removed lists can not be restored.',
+      okText: 'Yes',
+      okType: 'danger',
+      cancelText: 'No',
+      onOk() {
+        dispatch(listActions.deleteListRequest(socket, { boardId, listId }))
+      }
+    });
+
   };
 
   openTitleEditor = () => {
@@ -106,15 +115,11 @@ class ListTitle extends Component {
               {listTitle}
             </div>
           )}
-        <Wrapper className="delete-list-wrapper" onSelection={this.deleteList}>
-          <Button className="delete-list-button">
-            <FaTrash />
+        <div className="delete-list-wrapper" >
+          <Button shape="circle" type="danger" onClick={this.deleteList} >
+            <Icon type="delete" />
           </Button>
-          <Menu className="delete-list-menu">
-            <div className="delete-list-header">Are you sure?</div>
-            <MenuItem className="delete-list-confirm">Delete</MenuItem>
-          </Menu>
-        </Wrapper>
+        </div>
       </div>
     );
   }

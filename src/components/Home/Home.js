@@ -27,6 +27,21 @@ class Home extends Component {
     const { dispatch, user, socket, boards } = this.props;
     console.log(boards);
     dispatch(boardActions.get(user.email));
+    //Boards
+    socket.on(DELETE_BOARD_SUCCESS, board => {
+      const {pathname} = window.location;
+      const params = pathname.split('/');
+      if (params[2] === board._id) return;
+      notification['warning']({
+        message: 'Attention',
+        description: <p>Board <strong>{board.title} has been closed by owner.</strong></p>
+      });
+      dispatch({
+        type: DELETE_BOARD_SUCCESS,
+        payload: board._id
+      })
+    })
+
     socket.on(UPDATE_MEMBER_SUCCESS, ({board, email}) => {
       const {pathname} = window.location;
       if (user.email !== email) return;
@@ -42,19 +57,17 @@ class Home extends Component {
       }
       else {
         const params = pathname.split('/');
-        if (params[1] === 'boards' && params[2] === board._id) {
+        if (params[2] === board._id) {
           return;
         }
-        
         notification['warning']({
           message: 'Attention',
           description: <p>You are removed from board <strong>{board.title}</strong></p>
         });
-        console.log(boards);
-        // dispatch({
-        //   type: DELETE_BOARD_SUCCESS,
-        //   payload: board._id
-        // })
+        dispatch({
+          type: DELETE_BOARD_SUCCESS,
+          payload: board._id
+        })
       }
     })
   }

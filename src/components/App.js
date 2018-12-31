@@ -39,10 +39,10 @@ class App extends Component {
         {alert.message && callMessage(alert.type, alert.message)}
         <Router history={history}>
           <div>
-            <PrivateRoute exact path="/" component={Home} />
-            <PrivateRoute exact path="/boards/:boardId/" component={Board} />
-            <Route path="/login" component={LoginPage} />
-            <Route path="/register" component={RegisterPage} />
+            <PrivateRoute key="home" exact path="/" component={Home} />
+            <PrivateRoute key="board" exact path="/boards/:boardId/" component={Board} />
+            <Route key="login" path="/login" component={LoginPage} />
+            <Route key="register" path="/register" component={RegisterPage} />
           </div>
         </Router>
       </>

@@ -30,7 +30,10 @@ const boardReducer = (state = initState, action) =>
     switch (action.type) {
       case UPDATE_MEMBER_SUCCESS: {
         const { _id, users } = action.payload;
-        draft.byId[_id].users = users;
+        draft.byId[_id] = {
+          ...draft.byId[_id],
+          users
+        }
         break;
       }
       case ADD_LIST_SUCCESS: {

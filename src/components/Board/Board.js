@@ -11,13 +11,11 @@ import { boardActions } from '../../actions/boardActions'
 import { UPDATE_CURRENT_BOARD_ID, DELETE_LIST_SUCCESS, ADD_LIST_SUCCESS, CHANGE_LIST_TITLE_SUCCESS, MOVE_LIST_SUCCESS, ADD_CARD_SUCCESS, MOVE_CARD_SUCCESS, CHANGE_CARD_TITLE_SUCCESS, DELETE_CARD_SUCCESS, UPDATE_MEMBER_SUCCESS, DELETE_BOARD_SUCCESS, GET_BOARD_REQUEST, GET_LIST_REQUEST, GET_CARD_REQUEST } from "../../actions/actionTypes";
 import { listActions } from "../../actions/listActions";
 import { cardActions } from "../../actions/cardActions";
-import { Select, Modal, Spin, notification } from 'antd';
+import { Select, Modal, Spin, Tag } from 'antd';
 import debounce from 'lodash/debounce';
 import axios from 'axios';
 import { history } from '../../helpers';
 import PropTypes from "prop-types";
-import { stat } from "fs";
-import { debug } from "util";
 
 const baseURL = 'http://localhost:4000/api';
 
@@ -61,6 +59,23 @@ class Board extends Component {
 
     dispatch(boardActions.getById(user.email, boardId));
 
+    //Boards
+    socket.on(DELETE_BOARD_SUCCESS, board => {
+      if(board._id === boardId) {
+        Modal.warn({
+          title: 'Attention',
+          content: <p>Board <strong>{board.title}</strong> has been closed by owner.</p>,
+          onOk() {
+            history.push('/');
+            dispatch({
+              type: DELETE_BOARD_SUCCESS,
+              payload: board._id
+            });
+          }
+        });
+      };
+    })
+
     //Lists
     socket.on(ADD_LIST_SUCCESS, (res) => {
       if (boardId !== res.boardId) return;
@@ -98,7 +113,7 @@ class Board extends Component {
     })
 
     //Members
-    socket.on(UPDATE_MEMBER_SUCCESS, ({ board, email }) => {
+    socket.on(UPDATE_MEMBER_SUCCESS, ({ board }) => {
       if (board._id !== boardId) return;
       if (board.users.includes(user.email)) {
         dispatch({
@@ -230,7 +245,6 @@ class Board extends Component {
   };
 
   fetchUser = (value) => {
-    console.log('fetching user', value);
     this.lastFetchId += 1;
     const fetchId = this.lastFetchId;
     this.setState({ data: [], fetching: true });
@@ -290,7 +304,7 @@ class Board extends Component {
   }
 
   render = () => {
-    const { lists, board, boardId, boardLoading, listLoading, cardLoading } = this.props;
+    const { lists, board, boardId, boardLoading, listLoading, user } = this.props;
     // const lists = board.lists.map(id => listById.byId[id]);
     const { data, fetching } = this.state;
     const Option = Select.Option;
@@ -307,7 +321,8 @@ class Board extends Component {
                 onWheel={this.handleWheel}
               >
                 <div className="add-user">
-                  <Select
+                  {(board.owner === user.email) ? 
+                  (<Select
                     mode="multiple"
                     style={{ minWidth: '300px' }}
                     value={board.users}
@@ -319,7 +334,13 @@ class Board extends Component {
                     onSelect={this.handleSelect}
                   >
                     {data.map(d => <Option key={d.value}>{d.text}</Option>)}
-                  </Select>
+                  </Select>) : (
+                    <div>
+                      <span className="users-title">Members:</span>
+                      {board.users.map(u => <Tag key={u} color="geekblue">{u}</Tag>)}
+                    </div>
+                  )}
+
                 </div>
                 {/* eslint-enable jsx-a11y/no-static-element-interactions */}
                 {!listLoading && (

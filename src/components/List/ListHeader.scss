@@ -15,7 +15,7 @@
   border: none;
   border-top-left-radius: inherit;
   color: $white;
-  font-weight: 700;
+  // font-weight: 700;
   overflow-wrap: break-word;
   cursor: pointer !important;
 }
@@ -35,7 +35,7 @@
   color: $black-text;
   font-family: inherit;
   font-size: 18px;
-  font-weight: 700;
+  // font-weight: 700;
   line-height: inherit;
   overflow: hidden;
   resize: none;
@@ -44,16 +44,16 @@
 .delete-list-wrapper {
   position: relative;
   align-self: flex-start;
+  padding: 7px;
 }
 
 .delete-list-button {
   display: flex;
   align-items: center;
   margin: 4px;
-  padding: 10px;
+  padding: 4px 8px !important;
   border-radius: $list-radius;
   color: $white;
-  font-size: 16px;
   cursor: pointer;
 }
 
@@ -97,4 +97,8 @@
 .delete-list-confirm:hover,
 .delete-list-confirm:focus {
   background: darkred;
+}
+
+.delete-button {
+  padding: 0px 8px !important;
 }
