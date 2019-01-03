@@ -23,7 +23,7 @@ class Header extends Component {
         </Link>
         <div className="header-right-side">
             {user.name}
-            <a className="signout-link" onClick={this.signOut}>
+            <a href='/' className="signout-link" onClick={this.signOut}>
               Sign out
             </a>
         </div>

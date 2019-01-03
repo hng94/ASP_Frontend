@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { withRouter } from "react-router-dom";
 import "./BoardTitle.scss";
 import { boardActions } from "../../actions/boardActions";
 
@@ -29,7 +28,7 @@ class BoardTitle extends Component {
   };
 
   submitTitle = () => {
-    const { dispatch, boardId, boardTitle, board, user } = this.props;
+    const { dispatch, boardTitle, board, user } = this.props;
     const { newTitle } = this.state;
     if (newTitle === "") return;
     if (boardTitle !== newTitle) {

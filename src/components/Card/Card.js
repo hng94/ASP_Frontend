@@ -30,9 +30,7 @@ class Card extends Component {
     this.setState({ editting: !this.state.editting });
   };
 
-  handleClick = event => {
-    const { tagName, checked, id } = event.target;
-    console.log('Click card ', this.props.card);
+  handleClick = () => {
     this.toggleCardEditor();
   };
 
@@ -68,8 +66,6 @@ class Card extends Component {
 
   render() {
     const { card, index, listId, isDraggingOver } = this.props;
-    const { isModalOpen } = this.state;
-    // const checkboxes = findCheckboxes(card.text);
     return (
       <>
         <Draggable draggableId={card._id} index={index}>
@@ -117,7 +113,6 @@ class Card extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  console.log(state);
   const card = state.cards.byId[ownProps.cardId]
   return {
     card,

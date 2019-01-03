@@ -1,5 +1,5 @@
 import produce from 'immer'
-import { ADD_CARD_SUCCESS, CHANGE_CARD_TITLE_SUCCESS, DELETE_CARD_SUCCESS, DELETE_LIST_SUCCESS, GET_CARD_SUCCESS, MOVE_CARD_SUCCESS, GET_CARD_REQUEST, MOVE_CARD_REQUEST } from '../actions/actionTypes';
+import { ADD_CARD_SUCCESS, CHANGE_CARD_TITLE_SUCCESS, DELETE_CARD_SUCCESS, GET_CARD_SUCCESS, MOVE_CARD_SUCCESS, GET_CARD_REQUEST, MOVE_CARD_REQUEST } from '../actions/actionTypes';
 
 const initState = {
   loading: true,
@@ -31,11 +31,11 @@ const cardReducer = (state = initState, action) =>
         draft.byId[_id] = { ...draft.byId[_id], title };
         break;
       }
-      case CHANGE_CARD_TITLE_SUCCESS: {
-        const {_id, title} = action.payload;
-        draft.byId[_id].title = {...draft.byId[_id].title, title};
-        break;
-      }
+      // case CHANGE_CARD_TITLE_SUCCESS: {
+      //   const {_id, title} = action.payload;
+      //   draft.byId[_id].title = {...draft.byId[_id].title, title};
+      //   break;
+      // }
       // case "CHANGE_CARD_COLOR": {
       //   const { color, cardId } = action.payload;
       //   return { ...state, [cardId]: { ...state[cardId], color } };

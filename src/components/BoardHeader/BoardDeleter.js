@@ -18,7 +18,7 @@ class BoardDeleter extends Component {
   };
 
   handleSelection = () => {
-    const { dispatch, match, history, user, socket } = this.props;
+    const { dispatch, match, user, socket } = this.props;
     const { boardId } = match.params;
     confirm({
       title: 'Are you sure to delete this board?',

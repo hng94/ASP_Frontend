@@ -2,10 +2,8 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import Textarea from "react-textarea-autosize";
-import shortid from "shortid";
 import "./ListAdder.scss";
 import {listActions} from '../../actions/listActions'
-import withRouter from 'react-router-dom';
 
 class ListAdder extends Component {
   static propTypes = {
@@ -48,7 +46,6 @@ class ListAdder extends Component {
   handleSubmit = () => {
     const { dispatch, boardId, socket } = this.props;
     const { listTitle } = this.state;
-    const listId = shortid.generate();
     if (listTitle === "") return;
     dispatch(listActions.addListRequest(socket, { boardId, listTitle }))
     this.setState({ isOpen: false, listTitle: "" });

@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Droppable } from "react-beautiful-dnd";
 import Card from "../Card/Card";
-import { Spin } from "antd";
 import PropTypes from "prop-types";
 
 class Cards extends Component {

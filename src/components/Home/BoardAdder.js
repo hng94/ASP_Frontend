@@ -1,8 +1,5 @@
 import React, { Component } from "react";
-import PropTypes from "prop-types";
 import { connect } from "react-redux";
-// import slugify from "slugify";
-import shortid from "shortid";
 import ClickOutside from "../ClickOutside/ClickOutside";
 import { boardActions } from "../../actions/boardActions";
 

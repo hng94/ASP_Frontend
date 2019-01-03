@@ -4,14 +4,13 @@ import { connect } from "react-redux";
 import Textarea from "react-textarea-autosize";
 import "./CardHeader.scss";
 import { cardActions } from "../../actions/cardActions";
-import {Button, Icon, Modal} from 'antd';
+import {Icon, Modal} from 'antd';
 
 const confirm = Modal.confirm;
 
 class CardTitle extends Component {
   static propTypes = {
     cardTitle: PropTypes.string.isRequired,
-    cardId: PropTypes.string.isRequired,
     cardId: PropTypes.string.isRequired,
     // cards: PropTypes.arrayOf(PropTypes.string).isRequired,
     dragHandleProps: PropTypes.object.isRequired,

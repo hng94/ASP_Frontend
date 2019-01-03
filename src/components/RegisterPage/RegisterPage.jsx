@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { userActions } from '../../actions';
 import {
-  Form, Icon, Input, Button, Checkbox,
+  Form, Icon, Input, Button,
 } from 'antd';
 import './RegisterPage.scss';
 

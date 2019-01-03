@@ -1,15 +1,12 @@
 import produce from 'immer'
 import {
   CHANGE_BOARD_TITLE,
-  DELETE_BOARD,
   ADD_LIST_SUCCESS,
   GET_BOARD_SUCCESS,
-  GET_LIST_REQUEST,
   ADD_BOARD_REQUEST,
   ADD_BOARD_SUCCESS,
   MESSAGE_FAILURE,
   DELETE_BOARD_SUCCESS,
-  DELETE_LIST_FAILURE,
   DELETE_BOARD_REQUEST,
   UPDATE_CURRENT_BOARD_ID,
   GET_BOARD_REQUEST,
@@ -38,17 +35,9 @@ const boardReducer = (state = initState, action) =>
       }
       case ADD_LIST_SUCCESS: {
         const { boardId, list } = action.payload;
+        if (draft.byId[boardId].lists.includes(list._id)) break;
         draft.byId[boardId].lists = [...draft.byId[boardId].lists, list._id]
-        // return {
-        //   ...state,
-        //   byId: {
-        //     ...state.byId,
-        //     [boardId]: {
-        //       ...state.byId[boardId],
-        //       lists: [...state.byId[boardId].lists, listId]
-        //     }
-        //   }
-        // }
+        break;
       }
       case MOVE_LIST_REQUEST: {
         draft.movingList = true;

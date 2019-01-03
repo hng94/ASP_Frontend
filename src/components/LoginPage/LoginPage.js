@@ -1,9 +1,8 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { userActions } from '../../actions';
 import {
-  Form, Icon, Input, Button, Checkbox,
+  Form, Icon, Input, Button,
 } from 'antd';
 import './LoginPage.scss';
 
